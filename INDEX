@@ -1,0 +1,8 @@
+anolis.ssd              Greater Antillean anolis lizard sexual size
+                        dimorphism data.
+bimac                   Anolis bimaculatus lizard size data.
+brown.fit               Brownian-motion model of evolution along a
+                        phylogenetic tree
+hansen.fit              Hansen model of evolution along a phylogenetic
+                        tree
+tree.plot               Simple plot of phylogenetic tree.
