@@ -1,6 +1,6 @@
 Package: ouch
-Version: 1.0-2
-Date: 2004-10-24
+Version: 1.0-3
+Date: 2004-10-27
 Title: Ornstein-Uhlenbeck models for phylogenetic comparative hypotheses
 Author: Aaron A. King <king@tiem.utk.edu>
 Maintainer: Aaron A. King <king@tiem.utk.edu>
@@ -8,4 +8,4 @@ Description: Fit and compare Ornstein-Uhlenbeck models for evolution
 	     along a phylogenetic tree.
 Depends: R(>= 1.9.1)
 License: GPL version 2 or later
-Packaged: Sun Oct 24 14:41:38 2004; king
+Packaged: Wed Oct 27 11:44:16 2004; king
