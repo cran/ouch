@@ -15,6 +15,7 @@
 \format{
   A data frame with 38 observations on the following 6 variables.
   \describe{
+    \item{node}{Labels for the nodes.}
     \item{species}{Names of extant species.}
     \item{log.SSD}{Log sexual size dimorphism of extant species.}
     \item{ancestor}{Ancestor node.}
@@ -64,11 +65,11 @@
 \examples{
 data(anolis.ssd)
 attach(anolis.ssd)
-tree.plot(ancestor,time,species,OU.7)
-brown.fit(log.SSD,ancestor,time)
-hansen.fit(log.SSD,ancestor,time,OU.1)
-hansen.fit(log.SSD,ancestor,time,OU.7)
+tree.plot(node,ancestor,time,species,OU.7)
+brown.fit(log.SSD,node,ancestor,time)
+hansen.fit(log.SSD,node,ancestor,time,OU.1)
+hansen.fit(log.SSD,node,ancestor,time,OU.7)
 }
-\author{Aaron A. King <king at tiem dot utk dot edu>}
+\author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <king at tiem dot utk dot edu>}
 \keyword{models}
 

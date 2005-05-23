@@ -5,4 +5,4 @@ brown.fit               Brownian-motion model of evolution along a
                         phylogenetic tree
 hansen.fit              Hansen model of evolution along a phylogenetic
                         tree
-tree.plot               Simple plot of phylogenetic tree.
+tree.plot               Validating and plotting phylogenetic trees.

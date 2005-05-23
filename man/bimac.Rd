@@ -19,6 +19,7 @@
 \format{
   A data frame with 45 observations on the following 8 variables.
   \describe{
+    \item{node}{Labels for the nodes.}
     \item{species}{Species names for extant species.}
     \item{size}{Body size (head length in mm) of extant species.}
     \item{ancestor}{Ancestral node.}
@@ -72,12 +73,12 @@
 \examples{
 data(bimac)
 attach(bimac)
-tree.plot(ancestor,time,names=species,regimes=OU.LP)
-brown.fit(log(size),ancestor,time/max(time))
-hansen.fit(log(size),ancestor,time/max(time),OU.1)
-hansen.fit(log(size),ancestor,time/max(time),OU.3)
-hansen.fit(log(size),ancestor,time/max(time),OU.4)
-hansen.fit(log(size),ancestor,time/max(time),OU.LP)
+tree.plot(node,ancestor,time,names=species,regimes=OU.LP)
+brown.fit(log(size),node,ancestor,time/max(time))
+hansen.fit(log(size),node,ancestor,time/max(time),OU.1)
+hansen.fit(log(size),node,ancestor,time/max(time),OU.3)
+hansen.fit(log(size),node,ancestor,time/max(time),OU.4)
+hansen.fit(log(size),node,ancestor,time/max(time),OU.LP)
 }
-\author{Aaron A. King <king at tiem dot utk dot edu>}
+\author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <king at tiem dot utk dot edu>}
 \keyword{models}

@@ -1,0 +1,5 @@
+Validation function to check tree and report errors in tree structure
+
+The root node should not need to have time = 0
+
+Rewrite tree.plot to use parse.tree as much as possible

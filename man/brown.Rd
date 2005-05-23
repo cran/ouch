@@ -10,17 +10,18 @@
   \item{brown.dev}{generates simulated data sets.}
 }
 \usage{
-brown.fit(data, topology, times)
-brown.dev(n = 1, topology, times, sigma, theta)
+brown.fit(data, node, ancestor, times)
+brown.dev(n = 1, node, ancestor, times, sigma, theta)
 }
 \arguments{
   \item{data}{Phenotypic data for extant species, i.e., at the
     terminal ends of the phylogenetic tree.}
-  \item{topology}{Specification of the topology of the phylogenetic
-    tree.  This is in the form of a vector of nonnegative integers, one
-    for each node in the tree.  The i-th number is that of the ancestor
-    of the i-th node.  The root node is distinguished by the number zero
-    (0).}
+  \item{node}{Specification of the names of the nodes.}
+  \item{ancestor}{Specification of the topology of the phylogenetic
+    tree.  This is in the form of a character vector of node names, one
+    for each node in the tree.  The i-th name is that of the ancestor
+    of the i-th node.  The root node is distinguished by having no
+    ancestor (i.e., NA).}
   \item{times}{A vector of nonnegative numbers, one per node in the
     tree, specifying the time at which each node is located.  The root node
     should be assigned time 0.}
