@@ -70,6 +70,6 @@ brown.fit(log.SSD,node,ancestor,time)
 hansen.fit(log.SSD,node,ancestor,time,OU.1)
 hansen.fit(log.SSD,node,ancestor,time,OU.7)
 }
-\author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <king at tiem dot utk dot edu>}
+\author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <kingaa at umich dot edu>}
 \keyword{models}
 

@@ -46,5 +46,5 @@ attach(bimac)
 is.valid.ouch.tree(node,ancestor,time,OU.LP)
 tree.plot(node,ancestor,time,species,OU.LP)
 }
-\author{Aaron A. King <king at tiem dot utk dot edu>}
+\author{Aaron A. King <kingaa at umich dot edu>}
 \keyword{hplot}

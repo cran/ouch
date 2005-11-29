@@ -61,5 +61,5 @@ hansen.dev(n = 1, node, ancestor, times, regimes, alpha, sigma, theta)
   Butler, M.A. and A.A. King (2004) Phylogenetic comparative analysis: a
   modeling approach for adaptive evolution. American Naturalist, in press.
 }
-\author{Aaron A. King <king at tiem dot utk dot edu>}
+\author{Aaron A. King <kingaa at umich dot edu>}
 \keyword{models}

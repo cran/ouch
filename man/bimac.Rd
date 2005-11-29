@@ -80,5 +80,5 @@ hansen.fit(log(size),node,ancestor,time/max(time),OU.3)
 hansen.fit(log(size),node,ancestor,time/max(time),OU.4)
 hansen.fit(log(size),node,ancestor,time/max(time),OU.LP)
 }
-\author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <king at tiem dot utk dot edu>}
+\author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <kingaa at umich dot edu>}
 \keyword{models}
