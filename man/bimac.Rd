@@ -75,10 +75,15 @@ data(bimac)
 attach(bimac)
 tree.plot(node,ancestor,time,names=species,regimes=OU.LP)
 brown.fit(log(size),node,ancestor,time/max(time))
-hansen.fit(log(size),node,ancestor,time/max(time),OU.1)
+hansen.fit(log(size),node,ancestor,time/max(time))
+## a simple bootstrap:
+sapply(hansen.dev(n=5,node,ancestor,time/max(time),alpha=0.19,sigma=0.22,theta=3.0),
+       function(x)unlist(hansen.fit(x,node,ancestor,time/max(time))))
+sapply(brown.dev(n=5,node,ancestor,time/max(time),sigma=0.22,theta=3),
+       function(x)unlist(hansen.fit(x,node,ancestor,time/max(time))))
 hansen.fit(log(size),node,ancestor,time/max(time),OU.3)
 hansen.fit(log(size),node,ancestor,time/max(time),OU.4)
 hansen.fit(log(size),node,ancestor,time/max(time),OU.LP)
-}
+detach(bimac)}
 \author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <kingaa at umich dot edu>}
 \keyword{models}

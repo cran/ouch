@@ -11,7 +11,8 @@ parse.tree <- function (nodenames, ancestors, times, regime.specs=NULL) {
   if (is.null(regime.specs)) {          # useful for BM models
     pt <- list(
                N=N,
-               tree.depth = max(times),
+               R=0,
+               tree.depth=max(times),
                term=term,
                branch.times=bt,
                epochs=e

@@ -67,8 +67,10 @@ data(anolis.ssd)
 attach(anolis.ssd)
 tree.plot(node,ancestor,time,species,OU.7)
 brown.fit(log.SSD,node,ancestor,time)
-hansen.fit(log.SSD,node,ancestor,time,OU.1)
+hansen.fit(log.SSD,node,ancestor,time,OU.1) # the root character state is estimated
+hansen.fit(log.SSD,node,ancestor,time) # stationary state assumption
 hansen.fit(log.SSD,node,ancestor,time,OU.7)
+detach(anolis.ssd)
 }
 \author{Marguerite A. Butler <mabutler at utk dot edu> and Aaron A. King <kingaa at umich dot edu>}
 \keyword{models}

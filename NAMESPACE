@@ -1,4 +1,4 @@
-export(hansen.fit, hansen.dev,
+export(hansen.fit, hansen.dev, hansen.prof,
        brown.fit, brown.dev,
        tree.plot,
        is.valid.ouch.tree)

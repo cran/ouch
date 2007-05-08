@@ -63,7 +63,7 @@ arrange.tree <- function (root, anc) {
 }
 
 
-is.valid.ouch.tree <- function (node, ancestor, times, regimes=NULL) {
+is.valid.ouch.tree <- function (node, ancestor, times, regimes = NULL) {
   valid <- TRUE
   node <- as.character(node)
   ancestor <- as.character(ancestor)

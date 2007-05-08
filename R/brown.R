@@ -15,14 +15,33 @@ brown.fit <- function (data, node, ancestor, times) {
   u = n * (1 + log(2*pi*sigma*sigma)) + log(det(v))
   dim(u) <- 1
   df <- 2
-  list(sigma=sigma,theta.0=theta,u=u,aic=u+2*df,sic=u+log(n)*df,df=df)
+  list(
+       sigma=sigma,
+       theta=theta,
+       loglik=-u/2,
+       deviance=u,
+       aic=u+2*df,
+       sic=u+log(n)*df,
+       df=df
+       )
 }
 
 brown.dev <- function(n = 1, node, ancestor, times, sigma, theta) {
   pt <- parse.tree(node,ancestor,times)
   v <- pt$branch.times
   x <- rmvnorm(n, rep(theta,dim(v)[1]), as.numeric(sigma^2)*v)
-  data.frame(x)
+  do.call(
+          c,
+          apply(
+                x,
+                1,
+                function (z) {
+                  y <- rep(NA,length(node))
+                  y[pt$term] <- z
+                  list(y)
+                }
+                )
+          )
 }
 
 
