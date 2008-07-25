@@ -1,12 +1,8 @@
-rmvnorm <- function (n = 1, mu, sigma) {
-  p <- length(mu)
-  if (!all(dim(sigma) == c(p,p)))
-    stop("incompatible arguments")
-  cf <- chol(sigma,pivot=F)
-  X <- matrix(mu,n,p,byrow=T)+matrix(rnorm(p*n),n)%*%cf
-  if (n == 1) {
-    drop(X)
-  }  else {
-    X
-  }
+rmvnorm <- function (n = 1, mean, var) {
+  p <- length(mean)
+  if (!all(dim(var)==c(p,p)))
+    stop("length of ",sQuote("mean")," must equal the dimension of the square matrix ",sQuote("var"))
+  cf <- t(chol(var))
+  matrix(mean,p,n)+cf%*%matrix(rnorm(p*n),p,n)
 }
+

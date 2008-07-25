@@ -1,94 +1,65 @@
-\name{hansen.fit}
-\alias{hansen.fit}
-\alias{hansen.dev}
-\alias{hansen.prof}
+\name{hansen}
+\alias{hansen}
 \title{Hansen model of evolution along a phylogenetic tree}
 \description{
-  These functions relate to the Hansen model for phylogenetic evolution.
-  \item{hansen.fit}{fits the parameters \eqn{\alpha}, \eqn{\sigma}, and
-    \eqn{\theta}  of this model.}
-  \item{hansen.prof}{computes the profile likelihood of the \eqn{\alpha}
-    parameter.}
-  \item{hansen.dev}{generates random deviates from the Hansen model.}
+  Fits the Ornstein-Uhlenbeck-based Hansen model to data.
+  The fitting is done using \code{optim}.
 }
 \usage{
-hansen.fit(data, node, ancestor, times, regimes = NULL,
-           interval = c(0, 100), tol = 1e-12)
-hansen.prof(alpha, data, node, ancestor, times, regimes = NULL)
-hansen.dev(n = 1, node, ancestor, times, regimes = NULL,
-           alpha, sigma, theta)
+hansen(data, tree, regimes, alpha, sigma,
+       fit = TRUE,
+       method = c("Nelder-Mead","subplex","BFGS","L-BFGS-B"),
+       hessian = FALSE, \dots)
 }
 \arguments{
-  \item{data}{Phenotypic data for extant species, i.e., at the
-    terminal ends of the phylogenetic tree.}
-  \item{node}{Character vector of names of the nodes.}
-  \item{ancestor}{Specification of the topology of the phylogenetic
-    tree.  This is in the form of a character vector of node names, one
-    for each node in the tree.  The i-th name is that of the ancestor of
-    the i-th node.  The root node is distinguished by having no ancestor
-    (i.e., NA).}
-  \item{times}{A vector of nonnegative numbers, one per node in the
-    tree, specifying the time at which each node is located.  The root node
-    should be assigned time 0.}
-  \item{regimes}{A vector of codes, one for each node in the
-    tree, specifying the selective regimes hypothesized to have been
-    operative.  Corresponding to each node, enter the code of the regime
-    hypothesized for the branch segment terminating in that node.
-    For the root node, because it has no branch segment terminating on
-    it, the regime specification is irrelevant.}
-  \item{interval}{The interval which will be searched for the optimal
-    \eqn{\alpha}.  By default, \eqn{0.001 < \alpha < 20}.}
-  \item{tol}{Convergence tolerance.}
-  \item{n}{Number of pseudorandom data sets to generate.}
-  \item{alpha}{Value of \eqn{\alpha} to use.}
-  \item{sigma}{Value of \eqn{\sigma} to use.}
-  \item{theta}{Value of \eqn{\theta} to use.}
+  \item{data}{
+    Phenotypic data for extant species, i.e., at the terminal twigs of the phylogenetic tree.
+    This can either be a single numeric vector or a list (or data-frame) containing \code{nchar} vectors (columns) of data.
+  }
+  \item{tree}{
+    A phylogenetic tree, specified as an \code{ouchtree} object.
+  }
+  \item{regimes}{
+    A vector of codes, one for each node in the tree, specifying the selective regimes hypothesized to have been operative.
+    Corresponding to each node, enter the code of the regime hypothesized for the branch segment terminating in that node.
+    For the root node, because it has no branch segment terminating on it, the regime specification is irrelevant.
+    If there are \code{nchar} quantitative characters (i.e., if \code{data} is a list with \code{nchar} columns), then \code{regimes} should be a list length 1 or \code{nchar}.
+  }
+  \item{alpha}{
+    An initial guess of the selection strength parameters \eqn{alpha}.
+    This is used to initialize the optimization algorithm.
+    This vector will be translated into a symmetric matrix by the function given in \code{alpha.fn}.
+  }
+  \item{sigma}{
+    An initial guess of the random drift parameters \eqn{sigma}, used to initialize the optimization algorithm.
+    This vector is translated into a lower-triangular matrix by the function \code{sigma.fn}.
+  }
+  \item{fit}{
+    If \code{fit=TRUE}, then the likelihood will be maximized.
+    If \code{fit=FALSE}, the likelihood will be evaluated at the specified values of \code{alpha} and \code{sigma}; the optima \code{theta} will be returned as well.
+  }
+  \item{method}{
+    The method to be used by the optimization algorithm, \code{optim}.
+    See \code{\link[subplex]{subplex}} and \code{\link{optim}} for information on the available options.
+  } 
+  \item{hessian}{
+    If \code{hessian=TRUE}, then the Hessian matrix will be computed by \code{optim}.
+  }
+  \item{\dots}{
+    Additional arguments will be passed as \code{control} options to \code{optim} or \code{subplex}.
+    See \code{\link{optim}} and \code{\link[subplex]{subplex}} for information on the available options.
+  }
 }
 \value{
-  \code{hansen.fit} returns a list containing the following elements:
-  \item{alpha}{Maximum likelihood estimate of \eqn{\alpha}.  Note that
-    if \eqn{\alpha} lies against one of the constraints (see
-    \code{interval} above), then this is not a maximum-likelihood
-    estimate.}
-  \item{sigma}{Maximum likelihood estimate of \eqn{\sigma}.}
-  \item{theta}{Maximum likelihood estimate of \eqn{\theta}.}
-  \item{loglik}{Log likelihood.}
-  \item{deviance}{-2 loglik.}
-  \item{aic}{Akaike information criterion.}
-  \item{sic}{Schwartz information criterion (=BIC)}
-  \item{df}{Number of parameters estimated (= 3 + number of regimes).}
-
-  \code{hansen.prof} allows one to compute the profile log likelihood
-  across a range of \eqn{\alpha}.  Specifically, at the values of
-  \eqn{\alpha} specified in \code{alpha}, the log likelihood of the given
-  data under the given regimes is computed.  \code{hansen.prof} returns
-  a named list containing the following elements:
-  \item{alpha}{the specified \code{alpha}}
-  \item{loglik}{the log likelihood}
-  \item{deviance}{the deviance (\eqn{-2 \log L})}
-  \item{aic}{the Akaike information criterion value}
-  \item{sic}{the Schwartz information criterion value}
-  Note that when \eqn{\alpha=0} exactly, the computed log likelihood
-  does not agree with the Brownian motion model.
-
-  \code{hansen.dev} returns a list of \code{n} simulated data sets.
-  Each data set corresponds exactly to the data used in the call to
-  \code{hansen.fit}.
+  \code{hansen} returns an object of class \code{hansentree}.
+  For details on the methods of that class, see \code{\link{hansentree}}.
 }
-\details{
-  The vector \code{regimes} should be of class factor.  If
-  \code{regimes} is unspecified or NULL, all lineages are assumed to be
-  evolving under a single, global OU process with a global optimum.
-  In this case, rather than estimate the character state at the root
-  node, the algorithm assumes that the character state at the root value
-  follows the stationary distribution for the OU process.  In general,
-  it is impossible to identify both the root character state and the
-  global optimum using contemporaneous data.
+\seealso{\code{\link{ouchtree}}, \code{\link{hansentree}}, \code{\link{optim}}
 }
 \references{
-  Butler, M.A. and A.A. King (2004) Phylogenetic comparative analysis: a
-  modeling approach for adaptive evolution. American Naturalist
-  164:683-695, 2004.
+  Butler, M.A. and A.A. King (2004)
+  Phylogenetic comparative analysis: a modeling approach for adaptive evolution.
+  American Naturalist 164:683-695.
 }
 \author{Aaron A. King <kingaa at umich dot edu>}
 \keyword{models}
