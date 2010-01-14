@@ -6,15 +6,18 @@
   The fitting is done using \code{optim} or \code{subplex}.
 }
 \usage{
-hansen(data, tree, regimes, alpha, sigma,
+hansen(data, tree, regimes, sqrt.alpha, sigma,
        fit = TRUE,
        method = c("Nelder-Mead","subplex","BFGS","L-BFGS-B"),
        hessian = FALSE, \dots)
 }
 \arguments{
   \item{data}{
-    Phenotypic data for extant species, i.e., at the terminal twigs of the phylogenetic tree.
-    This can either be a single numeric vector or a list (or data-frame) containing \code{nchar} vectors (columns) of data.
+    Phenotypic data for extant species, i.e., species at the terminal twigs of the phylogenetic tree.
+    This can either be a single named numeric vector, a list of \code{nchar} named vectors, or a data-frame containing \code{nchar} data variables.
+    There must be an entry per variable for every node in the tree; use \code{NA} to represent missing data.
+    If the data are supplied as one or more named vectors, the names attributes are taken to correspond to the node names specified when the \code{ouchtree} was constructed (see \code{\link{ouchtree}}).
+    If the data are supplied as a data-frame, the rownames serve that purpose.
   }
   \item{tree}{
     A phylogenetic tree, specified as an \code{ouchtree} object.
@@ -23,9 +26,9 @@ hansen(data, tree, regimes, alpha, sigma,
     A vector of codes, one for each node in the tree, specifying the selective regimes hypothesized to have been operative.
     Corresponding to each node, enter the code of the regime hypothesized for the branch segment terminating in that node.
     For the root node, because it has no branch segment terminating on it, the regime specification is irrelevant.
-    If there are \code{nchar} quantitative characters (i.e., if \code{data} is a list with \code{nchar} columns), then \code{regimes} should be a list length 1 or \code{nchar}.
+    If there are \code{nchar} quantitative characters, then one can specify a single set of \code{regimes} for all characters or a list of \code{nchar} regime specifications, one for each character.
   }
-  \item{alpha, sigma}{
+  \item{sqrt.alpha, sigma}{
     These are used to initialize the optimization algorithm.
     The selection strength matrix \eqn{\alpha}{alpha} and the random drift variance-covariance matrix \eqn{\sigma^2}{sigma^2} are parameterized by their matrix square roots.
     Specifically, these initial guesses are each packed into lower-triangular matrices (column by column).
@@ -34,7 +37,8 @@ hansen(data, tree, regimes, alpha, sigma,
   }
   \item{fit}{
     If \code{fit=TRUE}, then the likelihood will be maximized.
-    If \code{fit=FALSE}, the likelihood will be evaluated at the specified values of \code{alpha} and \code{sigma}; the optima \code{theta} will be returned as well.
+    If \code{fit=FALSE}, the likelihood will be evaluated at the specified values of \code{sqrt.alpha} and \code{sigma};
+    the optima \code{theta} will be returned as well.
   }
   \item{method}{
     The method to be used by the optimization algorithm, \code{optim}.
@@ -60,16 +64,17 @@ hansen(data, tree, regimes, alpha, sigma,
   We make these assumptions and therefore can assume that the matrix \eqn{\alpha}{alpha} has a lower-triangular square root.
 
   The \code{hansen} code uses numerical optimization to maximize the likelihood.
-  To do this, it parameterizes the \eqn{\alpha}{alpha} and \eqn{\sigma}{sigma} matrices.
+  To do this, it parameterizes the \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices.
   Each matrix can be parameterized by \code{nchar*(nchar+1)} parameters, where \code{nchar} is the number of quantitative characters.
-  Specifically, the parameters initialized by the \code{alpha} argument of \code{hansen} are used to fill the nonzero entries of a lower-triangular matrix (in column-major order), which is then multiplied by its transpose to give the selection-strength matrix.
+  Specifically, the parameters initialized by the \code{sqrt.alpha} argument of \code{hansen} are used to fill the nonzero entries of a lower-triangular matrix (in column-major order), which is then multiplied by its transpose to give the selection-strength matrix.
   The parameters specified in \code{sigma} fill the nonzero entries in the lower triangular \eqn{\sigma}{sigma} matrix.
   When \code{hansen} is executed, the numerical optimizer maximizes the likelihood over these parameters.
   The \code{print}, \code{show}, and \code{summary} methods for the resulting \code{hansentree} object display (among other things) the estimated \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices.
-  The \code{coef} method extracts a named list containing not only these matrices (given as the \code{alpha.matrix} and \code{sigma.sq.matrix} elements) but also the MLEs returned by the optimizer (as \code{alpha} and \code{sigma}, respectively).
-  The latter elements should not be interpreted, but can be used to restart the algorithm, etc.
+  The \code{coef} method extracts a named list containing not only these matrices (given as the \code{alpha.matrix} and \code{sigma.sq.matrix} elements) but also the MLEs returned by the optimizer (as \code{sqrt.alpha} and \code{sigma}, respectively).
+  \strong{The latter elements should not be interpreted, but can be used to restart the algorithm, etc.}
 }
-\seealso{\code{\link{ouchtree}}, \code{\link{hansentree}}, \code{\link{optim}}
+\seealso{
+  \code{\link{ouchtree}}, \code{\link{hansentree}}, \code{\link{optim}}, \code{\link{bimac}}, \code{\link{anolis.ssd}}
 }
 \references{
   Butler, M.A. and A.A. King (2004)
