@@ -1,4 +1,4 @@
-56fb68f06c5ccc081eadd0713ad098da *DESCRIPTION
+55f1707cfb5a50e0a3f1274ee777117b *DESCRIPTION
 9cf99cf500d9896d435368ae6c3c96b8 *NAMESPACE
 dd20f25acf2553efb1e8de857c32708e *R/ape2ouch.R
 b760e0852a21c0d098cad1bd1f267389 *R/brown.R
@@ -10,7 +10,7 @@ f9b8400b8799c3dc81b700f8d5364628 *R/ouchtree.R
 fd6f474c8a0c8e6b6f10275a29cbe722 *R/plot.R
 15ade8c42da6cc3525afd85696c5c400 *R/rmvnorm.R
 ca4344515f92fe43f17580ae5788983d *data/anolis.ssd.csv.gz
-a03538735c41850d55300665799cf44d *data/bimac.csv.gz
+6c9c17ade0d51b1d4d09f58e8ef5e06e *data/bimac.csv.gz
 d08c6fa1c131196d97987aaa887f6f59 *inst/CITATION
 65b7fdff32bd574214e9868f99c6ace8 *inst/ChangeLog
 37483d9025577e53130dc59df034c53f *inst/GPL
@@ -22,7 +22,7 @@ eb97044cdd4b8d5bedaad1a5cd1939fe *man/anolis.ssd.Rd
 67edb8e5618fa103ae7cd42e53df5afd *man/bimac.Rd
 1b001bb7c48bf12cbb98b8e1cb2569cc *man/brown.Rd
 30ae7a1e0164ad02b7e02c118c03af0f *man/browntree-class.Rd
-5735de9a88dbb9f6de73bf2bb2066be8 *man/hansen.Rd
+119291cc383c3e620230aa3399d119a4 *man/hansen.Rd
 ee13e67bfddc6fcbd7e22076780b5e15 *man/hansentree-class.Rd
 a71a61b32e9eddd1fbf067c1bf0d0491 *man/hansentree-methods.Rd
 5bade0f55e0577153f21bc830182a91a *man/ouch-package.Rd
