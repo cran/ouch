@@ -1,3 +1,5 @@
+#' @importFrom stats rnorm
+
 rmvnorm <- function (n = 1, mean, var) {
   p <- length(mean)
   if (!all(dim(var)==c(p,p)))
