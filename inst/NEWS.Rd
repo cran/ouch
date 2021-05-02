@@ -1,5 +1,13 @@
 \name{NEWS}
 \title{News for Package 'ouch'}
+\section{Changes in ouch version 2.16}{
+  \itemize{
+    \item The arguments to the various \code{plot} methods have changed.
+    There is now much finer control over the plotting.
+    In particular, one can specify a different palette of colors, adjust the width of the margin in which taxon labels are printed, and pass options separately to the base-graphics \code{plot}, \code{text}, and \code{legend} commands under0lying the \pkg{ouch} \code{plot} methods.
+    \item A layout bug in \code{plot} has been fixed.
+  }
+}
 \section{Changes in ouch version 2.15}{
   \itemize{
     \item The \code{plot} function now spaces the terminal taxa evenly.

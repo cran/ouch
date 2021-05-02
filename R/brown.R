@@ -27,6 +27,17 @@ setClass(
   )
 )
 
+setAs(
+  from='browntree',
+  to='data.frame',
+  def = function (from) {
+    cbind(
+      as(as(from,'ouchtree'),'data.frame'),
+      as.data.frame(from@data)
+    )
+  }
+)
+
 #' @rdname brown
 #' @include ouchtree.R glssoln.R rmvnorm.R
 #' 
@@ -65,7 +76,8 @@ brown <- function (data, tree) {
     for (xx in data) {
       no.dats <- which(is.na(xx[tree@nodes[tree@term]]))
       if (length(no.dats)>0)
-        stop("missing data on terminal node(s): ",paste(tree@nodes[tree@term[no.dats]],collapse=','))
+        stop("missing data on terminal node(s): ",
+          paste(sQuote(tree@nodes[tree@term[no.dats]]),collapse=', '))
     }
   } else
     stop(sQuote("data")," must be either a single numeric data set or a list of numeric data sets")
@@ -122,45 +134,8 @@ brown.deviate <- function(n = 1, object) {
   apply(X,3,as.data.frame)
 }
 
-#' @rdname simulate
-#' @include simulate.R
-#' @importFrom stats runif
-#' @param object fitted model object
-#' @export
-setMethod(
-  'simulate',
-  signature=signature(object='browntree'),
-  function (object, nsim = 1, seed = NULL, ...) {
-    if (!is.null(seed)) {
-      if (!exists('.Random.seed',envir=.GlobalEnv)) runif(1)
-      save.seed <- get('.Random.seed',envir=.GlobalEnv)
-      set.seed(seed)
-    }
-    X <- brown.deviate(n=nsim,object)
-    if (!is.null(seed)) {
-      assign('.Random.seed',save.seed,envir=.GlobalEnv)
-    }
-    X
-  }
-)
-
-#' @rdname update
-#' @importFrom stats update
-#' @export
-setMethod(
-  'update',
-  signature=signature(object='browntree'),
-  function (object, data, ...) {
-    if (missing(data)) data <- object@data
-    brown(
-      data=data,
-      tree=object,
-      ...
-    )
-  }
-)
-
 #' @rdname coef
+#' @include coef.R
 #' @importFrom stats coef
 #' @return \code{coef} applied to a \code{browntree} object extracts a list with three elements:
 #' \describe{
@@ -182,6 +157,7 @@ setMethod(
 )
 
 #' @rdname print
+#' @include print.R
 #' @export
 setMethod(
   'show',
@@ -193,6 +169,7 @@ setMethod(
 )
 
 #' @rdname print
+#' @include print.R
 #' @return \code{print} displays the tree as a table, along with the coefficients of the fitted model and diagnostic information.
 #' @export
 setMethod(
@@ -212,7 +189,8 @@ setMethod(
   }
 )
 
-#' @rdname loglik
+#' @rdname logLik
+#' @include logLik.R
 #' @importFrom stats logLik
 #' @export
 setMethod(
@@ -222,6 +200,7 @@ setMethod(
 )
 
 #' @rdname summary
+#' @include summary.R
 #' @return \code{summary} applied to a \code{browntree} object returns information about the fitted model, including parameter estimates and quantities describing the goodness of fit.
 #' @export
 setMethod(
@@ -248,13 +227,52 @@ setMethod(
   }
 )
 
-setAs(
-  from='browntree',
-  to='data.frame',
-  def = function (from) {
-    cbind(
-      as(as(from,'ouchtree'),'data.frame'),
-      as.data.frame(from@data)
+#' @rdname simulate
+#' @include simulate.R package.R
+#' @importFrom stats runif
+#' @param object fitted model object
+#' @export
+setMethod(
+  'simulate',
+  signature=signature(object='browntree'),
+  function (object, nsim = 1, seed = NULL, ...) {
+    seed <- freeze(seed)
+    X <- brown.deviate(n=nsim,object)
+    thaw(seed)
+    X
+  }
+)
+
+#' @rdname update
+#' @include update.R
+#' @importFrom stats update
+#' @export
+setMethod(
+  'update',
+  signature=signature(object='browntree'),
+  function (object, data, ...) {
+    if (missing(data)) data <- object@data
+    brown(
+      data=data,
+      tree=object,
+      ...
     )
+  }
+)
+
+#' @rdname bootstrap
+#' @include bootstrap.R
+#' @export
+setMethod(
+  "bootstrap",
+  signature=signature(object="browntree"),
+  function (object, nboot = 200, seed = NULL, ...) {
+    simdata <- simulate(object,nsim=nboot,seed=seed)
+    results <- vector(mode='list',length=nboot)
+    toshow <- c("sigma.squared","theta","loglik","aic","aic.c","sic","dof")
+    for (b in seq_len(nboot)) {
+      results[[b]] <- summary(update(object,data=simdata[[b]],...))
+    }
+    as.data.frame(t(sapply(results,function(x)unlist(x[toshow]))))
   }
 )

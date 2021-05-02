@@ -22,6 +22,7 @@
 #'   \item{Ornstein-Uhlenbeck models}{\code{\link{hansen}}}
 #'   \item{Simulation of models}{\code{\link[ouch:simulate]{simulate}}}
 #'   \item{Display of data}{\code{\link[ouch:plot]{plot}}}
+#'   \item{Examples}{\code{\link{anolis.ssd}}, \code{\link{bimac}}}
 #' }
 #' @author Aaron A. King
 #' @references
@@ -44,5 +45,25 @@ reqd_arg <- function (method, object) {
   if (is.null(method) || length(method)==0)
     stop(sQuote(object)," is a required argument.",call.=FALSE)
   else
-    stop(method,sQuote(object)," is a required argument.",call.=FALSE)
+    stop("in ",sQuote(method),": ",sQuote(object),
+      " is a required argument.",call.=FALSE)
+}
+
+#' @importFrom stats runif
+freeze <- function (seed = NULL) {
+  if (!is.null(seed)) {
+    if (!exists('.Random.seed',envir=.GlobalEnv)) runif(1)
+    save.seed <- get('.Random.seed',envir=.GlobalEnv)
+    set.seed(seed)
+    invisible(save.seed)
+  } else {
+    invisible(NULL)
+  }
+}
+
+thaw <- function (seed = NULL) {
+  if (!is.null(seed)) {
+    assign('.Random.seed',seed,envir=.GlobalEnv)
+  }
+  invisible(NULL)
 }
