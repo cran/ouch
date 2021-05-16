@@ -6,7 +6,6 @@
 \alias{bootstrap,ANY-method}
 \alias{bootstrap,browntree-method}
 \alias{bootstrap,hansentree-method}
-\alias{bootstrap-hansentree,}
 \title{Bootstrapping for uncertainty quantification}
 \usage{
 \S4method{bootstrap}{missing}(object, ...)
@@ -20,26 +19,68 @@
 \arguments{
 \item{object}{A fitted model object.}
 
-\item{...}{Additional arguments are passed to \code{\link[ouch:update]{update}}.}
+\item{...}{Additional arguments are passed to \code{\link{update}}.}
 
 \item{nboot}{integer; number of bootstrap replicates.}
 
-\item{seed}{integer; setting \code{seed} to a non-\code{NULL} value allows one to fix the random seed (see \code{\link[ouch:simulate]{simulate}}).}
+\item{seed}{integer; setting \code{seed} to a non-\code{NULL} value allows one to fix the random seed (see \link{simulate}).}
 }
 \description{
-Generic bootstrapping for \pkg{ouch} models.
+Parametric bootstrapping for \pkg{ouch} models.
 }
 \details{
 \code{bootstrap} performs a parametric bootstrap for estimation of confidence intervals.
 }
+\examples{
+\dontrun{
+## Fit BM and a 5-regime OU model to the A. bimaculatus data
+tree <- with(bimac,ouchtree(node,ancestor,time/max(time),species))
+
+h1 <- brown(
+  data=log(bimac['size']),
+  tree=tree
+)
+
+h5 <- hansen(
+  data=log(bimac['size']),
+  tree=tree,
+  regimes=bimac['OU.LP'],
+  sqrt.alpha=1,
+  sigma=1,
+  reltol=1e-11,
+  parscale=c(0.1,0.1),
+  hessian=TRUE
+)
+
+## What are appropriate AIC.c cutoffs?
+simdat <- simulate(h1,nsim=100,seed=92759587)
+b1 <- sapply(simdat,function(x)summary(update(h1,data=x))$aic.c)
+tic <- Sys.time()
+b5 <- sapply(simdat,function(x)summary(update(h5,data=x))$aic.c)
+toc <- Sys.time()
+print(toc-tic)
+cat("approximate 95\% AIC.c cutoff",signif(quantile(b1-b5,0.95),digits=3),"\n")
+
+## Bootstrap confidence intervals
+boots.h1 <- bootstrap(h1,nboot=200,seed=92759587)
+cat("bootstrap 95\% confidence intervals for h1:\n")
+print(t(sapply(boots.h1,quantile,probs=c(0.025,0.975))),digits=3)
+
+boots.h5 <- bootstrap(h5,nboot=200,seed=92759587)
+cat("bootstrap 95\% confidence intervals for h5:\n")
+print(t(sapply(boots.h5,quantile,probs=c(0.025,0.975))),digits=3)
+}
+}
 \seealso{
-Other methods: 
+Other methods for ouch trees: 
 \code{\link{coef}()},
 \code{\link{logLik}},
+\code{\link{ouch-package}},
+\code{\link{paint}()},
 \code{\link{plot}()},
 \code{\link{print}()},
 \code{\link{simulate}()},
 \code{\link{summary}()},
 \code{\link{update}()}
 }
-\concept{methods}
+\concept{methods for ouch trees}

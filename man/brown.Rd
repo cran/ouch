@@ -2,18 +2,19 @@
 % Please edit documentation in R/brown.R
 \name{brown}
 \alias{brown}
+\alias{browntree-class}
 \title{Phylogenetic Brownian motion models}
 \usage{
 brown(data, tree)
 }
 \arguments{
-\item{data}{Phenotypic data for extant species, i.e., at the terminal ends
-of the phylogenetic tree.  This can either be a numeric vector or a list.
-If it is a numeric vector, there must be one entry for every node.  If it is
-a list, it must consist entirely of numeric vectors, each of which has one
-entry per node.  A data-frame is coerced to a list.}
+\item{data}{Phenotypic data for extant species, i.e., at the terminal ends of the phylogenetic tree.
+This can either be a numeric vector or a list.
+If it is a numeric vector, there must be one entry for every node.
+If it is a list, it must consist entirely of numeric vectors, each of which has one entry per node.
+A data-frame is coerced to a list.}
 
-\item{tree}{A phylogenetic tree, specified as an \code{ouchtree} object.}
+\item{tree}{A phylogenetic tree, specified as an \code{\link{ouchtree}} object.}
 }
 \value{
 \code{brown} returns an object of class \code{browntree}.
@@ -22,13 +23,52 @@ entry per node.  A data-frame is coerced to a list.}
 The function \code{brown} creates a \code{browntree} object by fitting a
 Brownian-motion model to data.
 }
+\examples{
+## Analysis of Anolis bimaculatus data
+tree <- with(bimac,ouchtree(node,ancestor,time/max(time),spcode))
+plot(tree,node.names=TRUE)
+
+h1 <- brown(log(bimac['size']),tree)
+h1
+plot(h1)
+
+h2 <- hansen(log(bimac['size']),tree,bimac['OU.1'],sqrt.alpha=1,sigma=1)
+h2
+plot(h2)
+
+h3 <- hansen(log(bimac['size']),tree,bimac['OU.3'],sqrt.alpha=1,sigma=1)
+h3
+plot(h3)
+
+h4 <- hansen(log(bimac['size']),tree,bimac['OU.4'],sqrt.alpha=1,sigma=1)
+h4
+plot(h4)
+
+h5 <- hansen(log(bimac['size']),tree,bimac['OU.LP'],sqrt.alpha=1,sigma=1,reltol=1e-5)
+h5 <- update(h5,method='subplex',reltol=1e-11,parscale=c(0.1,0.1),hessian=TRUE)
+h5
+plot(h5)
+
+simdat <- simulate(h5,nsim=10)
+hsim <- update(h5,data=simdat[[1]])
+summary(hsim)
+bsim <- update(h1,data=simdat[[1]])
+summary(bsim)
+}
 \references{
 \Butler2004
 }
 \seealso{
-\code{\link{ouchtree}}, \code{\link{hansen}}, \code{\link{bimac}}, \code{\link{anolis.ssd}}
+\code{\link{bimac}}, \code{\link{anolis.ssd}}, \code{\link{hansen}}
+
+Other phylogenetic comparative models: 
+\code{\link{hansen}()},
+\code{\link{ouch-package}},
+\code{\link{ouchtree}},
+\code{\link{paint}()}
 }
 \author{
 Aaron A. King
 }
+\concept{phylogenetic comparative models}
 \keyword{models}

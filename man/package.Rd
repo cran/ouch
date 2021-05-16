@@ -3,6 +3,7 @@
 \docType{package}
 \name{ouch-package}
 \alias{ouch-package}
+\alias{ouch}
 \title{Ornstein-Uhlenbeck methods for comparative phylogenetic hypotheses}
 \description{
 The \pkg{ouch} package provides facilities for phylogenetic comparative analysis based on Ornstein-Uhlenbeck models of trait evolution along a phylogeny.
@@ -10,25 +11,24 @@ Multivariate data and complex adaptive hypotheses are supported.
 }
 \section{Classes}{
 
-The basic class, \code{ouchtree}, is provided to encode a
-phylogenetic tree.  Plot and print methods are provided.
+The basic class, \code{ouchtree}, is provided to encode a phylogenetic tree.
+Plot and print methods are provided.
 
-The class \code{browntree} derives from class \code{ouchtree} and encodes
-the results of fitting a Brownian Motion model to data.
+The class \code{browntree} derives from class \code{ouchtree} and encodes the results of fitting a Brownian Motion model to data.
 
-The class \code{hansentree} derives from class \code{ouchtree} and encodes
-the results of fitting a Hansen model to data.
+The class \code{hansentree} derives from class \code{ouchtree} and encodes the results of fitting a Hansen model to data.
 }
 
 \section{Detailed Documentation}{
 
-\describe{
-  \item{Phylogenies in \pkg{ouch} format}{\code{\link{ouchtree}}, \code{\link{ape2ouch}}}
-  \item{Brownian motion models}{\code{\link{brown}}}
-  \item{Ornstein-Uhlenbeck models}{\code{\link{hansen}}}
-  \item{Simulation of models}{\code{\link[ouch:simulate]{simulate}}}
-  \item{Display of data}{\code{\link[ouch:plot]{plot}}}
-  \item{Examples}{\code{\link{anolis.ssd}}, \code{\link{bimac}}}
+\itemize{
+\item Phylogenies in \pkg{ouch} format: \code{\link[=ouchtree]{ouchtree()}}, \code{\link[=ape2ouch]{ape2ouch()}}
+\item Brownian motion models: \code{\link[=brown]{brown()}}
+\item Ornstein-Uhlenbeck models: \code{\link[=hansen]{hansen()}}, \code{\link[=paint]{paint()}}
+\item Simulation of models: \code{\link[=simulate]{simulate()}}
+\item Display of data: \code{\link[=plot]{plot()}}
+\item Extraction of information from fitted models: \code{\link[=summary]{summary()}}, \code{\link[=logLik]{logLik()}}, \code{\link[=coef]{coef()}}
+\item Example datasets: \code{\link{anolis.ssd}}, \code{\link{bimac}}
 }
 }
 
@@ -37,7 +37,32 @@ the results of fitting a Hansen model to data.
 
 \Cressler2015
 }
+\seealso{
+Other phylogenetic comparative models: 
+\code{\link{brown}()},
+\code{\link{hansen}()},
+\code{\link{ouchtree}},
+\code{\link{paint}()}
+
+Other methods for ouch trees: 
+\code{\link{bootstrap}()},
+\code{\link{coef}()},
+\code{\link{logLik}},
+\code{\link{paint}()},
+\code{\link{plot}()},
+\code{\link{print}()},
+\code{\link{simulate}()},
+\code{\link{summary}()},
+\code{\link{update}()}
+
+Other examples: 
+\code{\link{anolis.ssd}},
+\code{\link{bimac}}
+}
 \author{
 Aaron A. King
 }
+\concept{examples}
+\concept{methods for ouch trees}
+\concept{phylogenetic comparative models}
 \keyword{models}

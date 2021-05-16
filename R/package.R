@@ -4,26 +4,28 @@
 #' Multivariate data and complex adaptive hypotheses are supported.
 #' 
 #' @name ouch-package
+#' @aliases ouch
 #' @rdname package
 #' @docType package
+#' @family phylogenetic comparative models
+#' @family methods for ouch trees
+#' @family examples
 #' @section Classes:
-#' The basic class, \code{ouchtree}, is provided to encode a
-#' phylogenetic tree.  Plot and print methods are provided.
+#' The basic class, `ouchtree`, is provided to encode a phylogenetic tree.
+#' Plot and print methods are provided.
 #' 
-#' The class \code{browntree} derives from class \code{ouchtree} and encodes
-#' the results of fitting a Brownian Motion model to data.
+#' The class `browntree` derives from class `ouchtree` and encodes the results of fitting a Brownian Motion model to data.
 #' 
-#' The class \code{hansentree} derives from class \code{ouchtree} and encodes
-#' the results of fitting a Hansen model to data.
+#' The class `hansentree` derives from class `ouchtree` and encodes the results of fitting a Hansen model to data.
 #' @section Detailed Documentation:
-#' \describe{
-#'   \item{Phylogenies in \pkg{ouch} format}{\code{\link{ouchtree}}, \code{\link{ape2ouch}}}
-#'   \item{Brownian motion models}{\code{\link{brown}}}
-#'   \item{Ornstein-Uhlenbeck models}{\code{\link{hansen}}}
-#'   \item{Simulation of models}{\code{\link[ouch:simulate]{simulate}}}
-#'   \item{Display of data}{\code{\link[ouch:plot]{plot}}}
-#'   \item{Examples}{\code{\link{anolis.ssd}}, \code{\link{bimac}}}
-#' }
+#'   - Phylogenies in \pkg{ouch} format: [`ouchtree()`], [`ape2ouch()`]
+#'   - Brownian motion models: [`brown()`]
+#'   - Ornstein-Uhlenbeck models: [`hansen()`], [`paint()`]
+#'   - Simulation of models: [`simulate()`]
+#'   - Display of data: [`plot()`]
+#'   - Extraction of information from fitted models: [`summary()`], [`logLik()`], [`coef()`]
+#'   - Example datasets: [`anolis.ssd`], [`bimac`]
+#' 
 #' @author Aaron A. King
 #' @references
 #' \Butler2004
@@ -35,18 +37,41 @@
 #' @keywords models
 NULL
 
+pStop <- function (fn, ...) {
+  fn <- as.character(fn)
+  stop("in ",sQuote(fn[1L]),": ",...,call.=FALSE)
+}
+
+pStop_ <- function (...) {
+  stop(...,call.=FALSE)
+}
+
+pWarn <- function (fn, ...) {
+  fn <- as.character(fn)
+  warning("in ",sQuote(fn[1L]),": ",...,call.=FALSE)
+}
+
+pWarn_ <- function (...) {
+  warning(...,call.=FALSE)
+}
+
 undef_method <- function (method, object) {
   o <- deparse(substitute(object))
-  stop(sQuote(method)," is undefined for ",sQuote(o)," of class ",
-    sQuote(class(object)),".",call.=FALSE)
+  pStop_(sQuote(method)," is undefined for ",sQuote(o)," of class ",
+    sQuote(class(object)),".")
 }
 
 reqd_arg <- function (method, object) {
   if (is.null(method) || length(method)==0)
-    stop(sQuote(object)," is a required argument.",call.=FALSE)
+    pStop_(sQuote(object)," is a required argument.")
   else
-    stop("in ",sQuote(method),": ",sQuote(object),
-      " is a required argument.",call.=FALSE)
+    pStop(method,sQuote(object)," is a required argument.")
+}
+
+undef_method <- function (method, object) {
+  o <- deparse(substitute(object))
+  stop(sQuote(method)," is undefined for ",sQuote(o)," of class ",
+    sQuote(class(object)),".",call.=FALSE)
 }
 
 #' @importFrom stats runif

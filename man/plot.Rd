@@ -4,17 +4,15 @@
 \alias{plot}
 \alias{plot,ouchtree-method}
 \alias{plot,hansentree-method}
-\alias{plot-hansentree}
-\title{ouch plotting functions}
+\title{\pkg{ouch} plotting functions}
 \usage{
 \S4method{plot}{ouchtree}(
   x,
-  y,
   ...,
   regimes = NULL,
   ladderize = TRUE,
   node.names = FALSE,
-  legend = TRUE,
+  legend = !is.null(regimes),
   labels,
   frame.plot = FALSE,
   palette = rainbow,
@@ -23,14 +21,12 @@
   legend_opts = list()
 )
 
-\S4method{plot}{hansentree}(x, ..., regimes)
+\S4method{plot}{hansentree}(x, ..., regimes, legend = TRUE)
 }
 \arguments{
 \item{x}{object to plot.}
 
-\item{y}{ignored.}
-
-\item{...}{additional arguments, passed to \code{\link[graphics]{plot}}.}
+\item{...}{additional arguments, passed to \code{\link[graphics:plot.default]{plot}}.}
 
 \item{regimes}{factor or character; a vector of regime paintings.}
 
@@ -47,29 +43,55 @@
 
 \item{palette}{function or character; specifies the colors to be used for the several regimes on the tree.
 Specified as a function, when given an integer, \code{n}, the function should create a vector of \code{n} colors.
-See, for example \code{\link[grDevices:rainbow]{rainbow}}.
+See, for example \code{\link[grDevices:palettes]{rainbow}}.
 One can also specify the \code{n} colors as a vector of color codes.
 There must be at least as many colors as levels in the \code{regimes}.}
 
 \item{margin}{numeric; width of the right margin (as a fraction of the plot width).
-Adjust this if labels are clipped.
-If different left and right margins are desired, furnish two numbers here.}
+Adjust this if labels are clipped (see Examples below).
+One can also adjust the width of the left margin (for example to aid in the formatting of the figure legend).
+To do this, furnish \code{margin=c(L, R)}, where \code{L} and \code{R} are the widths of the right and left margins, respectively, as fractions of the plot width.
+Obviously, in this case, we must have \code{L+R<1}.}
 
-\item{text_opts}{options for the labels; passed to \code{\link[graphics]{text}}}
+\item{text_opts}{options for the labels; passed to \code{\link[graphics:text]{text}}.}
 
-\item{legend_opts}{options for the the legend; passed to \code{\link[graphics]{legend}}}
+\item{legend_opts}{options for the the legend; passed to \code{\link[graphics:legend]{legend}}.}
 }
 \description{
 Plot phylogenetic trees, with or without regime paintings.
 }
+\examples{
+tree <- with(
+  bimac,
+  ouchtree(nodes=node,ancestors=ancestor,times=time,labels=spcode)
+)
+
+plot(tree)
+plot(tree, node.names=TRUE)    # display node names
+
+## When taxon names are long, they are cut off when the
+## default settings are used.  For example:
+tree2 <- with(
+  bimac,
+  ouchtree(nodes=node,ancestors=ancestor,times=time,
+    labels=ifelse(is.na(species),NA,paste(species,island,sep=", "))
+  )
+)
+
+plot(tree2) # long species names are cut off
+## This is fixed by increasing right margin and font size:
+plot(tree2,margin=0.35,text_opts=list(cex=0.7))
+}
 \seealso{
-Other methods: 
+Other methods for ouch trees: 
 \code{\link{bootstrap}()},
 \code{\link{coef}()},
 \code{\link{logLik}},
+\code{\link{ouch-package}},
+\code{\link{paint}()},
 \code{\link{print}()},
 \code{\link{simulate}()},
 \code{\link{summary}()},
 \code{\link{update}()}
 }
-\concept{methods}
+\concept{methods for ouch trees}

@@ -1,17 +1,15 @@
-#' Phylogenetic tree object in 'ouch' format.
+#' Phylogenetic tree object in \pkg{ouch} format
 #' 
-#' An object containing a phylogenetic tree in a form suitable for using \pkg{ouch} methods.
+#' `ouchtree` constructs a representation of a phylogenetic tree.
 #' 
-#' \code{ouchtree} creates an \code{ouchtree} object.
-#' This contains the topology, branch times, and epochs.
-#' It also (optionally) holds names of taxa for display purposes.
+#' `ouchtree()` creates an `ouchtree` object given information on the phylogeny's topology and node times.
+#' An `ouchtree` object also (optionally) holds names of taxa for display purposes.
 #' 
 #' @name ouchtree
 #' @rdname ouchtree
-#' @aliases ouchtree ouchtree-class
-#' 
+#' @aliases ouchtree-class
+#' @family phylogenetic comparative models
 #' @author Aaron A. King
-#' @seealso \code{ouchtree}, \code{ape2ouch}, \code{brown}, \code{hansen}
 #' @keywords models
 #' @example examples/bimac1.R
 #' 
@@ -41,10 +39,10 @@ setClass(
 #' These are used internally and must be unique.
 #' @param ancestors Specification of the topology of the phylogenetic tree.
 #' This is in the form of a character vector specifying the name
-#' (as given in the \code{nodes} argument)
+#' (as given in the `nodes` argument)
 #' of the immediate ancestor of each node.
 #' In particular, the i-th name is that of the ancestor of the i-th node.
-#' The root node is distinguished by having no ancestor (i.e., \code{NA}).
+#' The root node is distinguished by having no ancestor (i.e., `NA`).
 #' @param times A vector of nonnegative numbers, one per node in the tree,
 #' specifying the time at which each node is located.
 #' Time should be increasing from the root node to the terminal twigs.
@@ -53,34 +51,34 @@ setClass(
 #' It is not necessary that these be unique.
 #'
 #' @include package.R
-#' @export ouchtree
+#' @export
 ouchtree <- function (nodes, ancestors, times, labels = as.character(nodes)) {
 
   nodes <- as.character(nodes)
   ancestors <- as.character(ancestors)
 
   n <- length(nodes)
-  if (anyDuplicated(nodes)>0) stop("node names must be unique")
+  if (anyDuplicated(nodes)>0) pStop("ouchtree","node names must be unique.")
   if (length(ancestors) != n)
-    stop("invalid tree: ",sQuote("ancestors")," must have the same length as ",sQuote("nodes"))
+    pStop("ouchtree","invalid tree: ",sQuote("ancestors")," must have the same length as ",sQuote("nodes"),".")
   if (length(times) != n) 
-    stop("invalid tree: ",sQuote("times")," must have the same length as ",sQuote("nodes"))
+    pStop("ouchtree","invalid tree: ",sQuote("times")," must have the same length as ",sQuote("nodes"),".")
   if (length(labels) != n)
-    stop("invalid tree: ",sQuote("labels")," must be the same length as ",sQuote("nodes"))
+    pStop("ouchtree","invalid tree: ",sQuote("labels")," must be the same length as ",sQuote("nodes"),".")
 
   root <- which(is.root.node(ancestors))
   if (length(root) != 1)
-    stop("invalid tree: there must be a unique root node, designated by its having ancestor = NA")
+    pStop("ouchtree","invalid tree: there must be a unique root node, designated by its having ancestor = NA.")
   if (times[root] != 0)
-    stop("the algorithms assume that the root node is at time=0")
+    pStop("ouchtree","the algorithms assume that the root node is at time=0.")
   
   term <- terminal.twigs(nodes,ancestors)
   if (length(term) <= 0)
-    stop("invalid tree: there ought to be at least one terminal node, don't you think?") #nocov
+    pStop("ouchtree","invalid tree: there ought to be at least one terminal node, don't you think?") #nocov
 
   outs <- which((!is.root.node(ancestors) & !(ancestors %in% nodes)))
   if (length(outs) > 0) {
-    stop(
+    pStop("ouchtree",
       ngettext(
         length(outs),
         "invalid tree: the ancestor of node ",
@@ -99,7 +97,7 @@ ouchtree <- function (nodes, ancestors, times, labels = as.character(nodes)) {
 
   if (any(anc==seq(along=anc),na.rm=TRUE)) {
     w <- which(anc==seq(along=anc))
-    stop("this is no tree: node ",nodes[w[1]]," is its own ancestor",call.=FALSE)
+    pStop("ouchtree","this is no tree: node ",nodes[w[1]]," is its own ancestor.")
   }
 
   lineages <- vector(mode='list',length=n)
@@ -110,13 +108,13 @@ ouchtree <- function (nodes, ancestors, times, labels = as.character(nodes)) {
     a <- anc[todo[k]]
     lineages[[todo[k]]] <- c(todo[k],lineages[[a]])
     if (todo[k] %in% lineages[[a]]) 
-      stop("this is no tree: circularity detected at node ",nodes[todo[k]]," in ",sQuote("ouchtree"),call.=FALSE)
+      pStop("ouchtree","this is no tree: circularity detected at node ",nodes[todo[k]]," in ",sQuote("ouchtree"),".")
     k <- k+1
   }
 
   for (k in 1:n) {
     if (!(root %in% lineages[[k]]))
-      stop("node ",nodes[k]," is disconnected",call.=FALSE)
+      pStop("ouchtree","node ",nodes[k]," is disconnected.")
   }
 
   new(

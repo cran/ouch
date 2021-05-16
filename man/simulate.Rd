@@ -5,8 +5,7 @@
 \alias{simulate}
 \alias{simulate,browntree-method}
 \alias{simulate,hansentree-method}
-\alias{simulate-hansentree,}
-\title{Simulations of a phylogenetic trait model.}
+\title{Simulations of a phylogenetic trait model}
 \usage{
 \S4method{simulate}{browntree}(object, nsim = 1, seed = NULL, ...)
 
@@ -29,13 +28,15 @@ The RNG will be reset to its pre-existing state when \code{simulate} returns.}
 \code{simulate} generates random deviates from a fitted model.
 }
 \seealso{
-Other methods: 
+Other methods for ouch trees: 
 \code{\link{bootstrap}()},
 \code{\link{coef}()},
 \code{\link{logLik}},
+\code{\link{ouch-package}},
+\code{\link{paint}()},
 \code{\link{plot}()},
 \code{\link{print}()},
 \code{\link{summary}()},
 \code{\link{update}()}
 }
-\concept{methods}
+\concept{methods for ouch trees}

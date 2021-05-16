@@ -1,7 +1,7 @@
 #' Ornstein-Uhlenbeck models of trait evolution
 #' 
-#' The function \code{hansen} fits an Ornstein-Uhlenbeck model to data.
-#' The fitting is done using \code{optim} or \code{subplex}.
+#' The function `hansen` fits an Ornstein-Uhlenbeck model to data.
+#' The fitting is done using `optim` or `subplex`.
 #' 
 #' The Hansen model for the evolution of a multivariate trait \eqn{X} along a lineage can be written as a stochastic differential equation (Ito diffusion)
 #' \deqn{dX=\alpha(\theta(t)-X(t))dt+\sigma dB(t),}{dX = alpha (theta(t)-X(t)) dt + sigma dB(t),}
@@ -17,28 +17,31 @@
 #' If we further restrict ourselves to the case of stabilizing selection, \eqn{\alpha}{alpha} will be positive definite as well.
 #' We make these assumptions and therefore can assume that the matrix \eqn{\alpha}{alpha} has a lower-triangular square root.
 #' 
-#' The \code{hansen} code uses unconstrained numerical optimization to maximize the likelihood.
+#' The `hansen` code uses unconstrained numerical optimization to maximize the likelihood.
 #' To do this, it parameterizes the \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices in a special way:
-#' each matrix is parameterized by \code{nchar*(nchar+1)/2} parameters, where \code{nchar} is the number of quantitative characters.
-#' Specifically, the parameters initialized by the \code{sqrt.alpha} argument of \code{hansen} are used
+#' each matrix is parameterized by `nchar*(nchar+1)/2` parameters, where `nchar` is the number of quantitative characters.
+#' Specifically, the parameters initialized by the `sqrt.alpha` argument of `hansen` are used
 #' to fill the nonzero entries of a lower-triangular matrix (in column-major order),
 #' which is then multiplied by its transpose to give the selection-strength matrix.
-#' The parameters specified in \code{sigma} fill the nonzero entries in the lower triangular \eqn{\sigma}{sigma} matrix.
-#' When \code{hansen} is executed, the numerical optimizer maximizes the likelihood over these parameters.
+#' The parameters specified in `sigma` fill the nonzero entries in the lower triangular \eqn{\sigma}{sigma} matrix.
+#' When `hansen` is executed, the numerical optimizer maximizes the likelihood over these parameters.
 #'
 #' @name hansen
 #' @aliases hansentree-class
 #' @rdname hansen
+#' @family phylogenetic comparative models
 #' @author Aaron A. King
 #' @seealso
-#' \code{\link{ouchtree}}, \code{\link{brown}}, \code{\link[stats:optim]{optim}}, \code{\link[subplex:subplex]{subplex}}, \code{\link{bimac}}, \code{\link{anolis.ssd}}
+#' [`stats::optim`], [`subplex::subplex`], [`bimac`], [`anolis.ssd`]
 #' @references
 #' \Butler2004
 #'
 #' \Cressler2015
 #' 
 #' @keywords models
-#' @example examples/hansen.R
+#' @example examples/anolis.R
+#' 
+#' @example examples/geospiza.R
 #' 
 NULL
 
@@ -78,32 +81,32 @@ setAs(
 #' @importFrom subplex subplex
 #'
 #' @param data Phenotypic data for extant species, i.e., species at the terminal twigs of the phylogenetic tree.
-#' This can either be a single named numeric vector, a list of \code{nchar} named vectors, or a data frame containing \code{nchar} data variables.
-#' There must be an entry per variable for every node in the tree; use \code{NA} to represent missing data.
+#' This can either be a single named numeric vector, a list of `nchar` named vectors, or a data frame containing `nchar` data variables.
+#' There must be an entry per variable for every node in the tree; use `NA` to represent missing data.
 #' If the
-#' data are supplied as one or more named vectors, the names attributes are taken to correspond to the node names specified when the \code{ouchtree} was constructed (see \code{\link{ouchtree}}).
+#' data are supplied as one or more named vectors, the names attributes are taken to correspond to the node names specified when the `ouchtree` was constructed (see [`ouchtree`]).
 #' If the data are supplied as a
 #' data-frame, the rownames serve that purpose.
-#' @param tree A phylogenetic tree, specified as an \code{ouchtree} object.
+#' @param tree A phylogenetic tree, specified as an `ouchtree` object.
 #' @param regimes A vector of codes, one for each node in the tree, specifying the selective regimes hypothesized to have been operative.
 #' Corresponding to each node, enter the code of the regime hypothesized for the branch segment terminating in that node.
 #' For the root node, because it has no branch segment terminating on it, the regime specification is irrelevant.
-#' If there are \code{nchar} quantitative characters, then one can specify a single set of \code{regimes} for all characters or a list of \code{nchar} regime specifications, one for each character.
+#' If there are `nchar` quantitative characters, then one can specify a single set of `regimes` for all characters or a list of `nchar` regime specifications, one for each character.
 #' @param sqrt.alpha,sigma These are used to initialize the optimization algorithm.
 #' The selection strength matrix \eqn{\alpha}{alpha} and the random drift variance-covariance matrix \eqn{\sigma^2}{sigma^2} are parameterized by their matrix square roots.
 #' Specifically, these initial guesses are each packed into lower-triangular matrices (column by column).
 #' The product of this matrix with its transpose is the \eqn{\alpha}{alpha} or \eqn{\sigma^2}{sigma^2} matrix.
 #' See Details for more information.
-#' @param fit If \code{fit=TRUE}, then the likelihood will be maximized.
-#' If \code{fit=FALSE}, the likelihood will be evaluated at the specified values of \code{sqrt.alpha} and \code{sigma};
-#' the optima \code{theta} will be returned as well.
+#' @param fit If `fit=TRUE`, then the likelihood will be maximized.
+#' If `fit=FALSE`, the likelihood will be evaluated at the specified values of `sqrt.alpha` and `sigma`;
+#' the optima `theta` will be returned as well.
 #' @param method The method to be used by the optimization algorithm.
-#' See \code{\link[subplex]{subplex}} and \code{\link{optim}} for information on the available options.
-#' @param hessian If \code{hessian=TRUE}, then the Hessian matrix will be computed by \code{optim}.
-#' @param \dots Additional arguments will be passed as \code{control} options to \code{optim} or \code{subplex}.
-#' See \code{\link{optim}} and \code{\link[subplex:subplex]{subplex}} for information on the available options.
+#' See [`subplex::subplex`] and [`stats::optim`] for information on the available options.
+#' @param hessian If `hessian=TRUE`, then the Hessian matrix will be computed by `optim`.
+#' @param \dots Additional arguments will be passed as `control` options to `optim` or `subplex`.
+#' See [`stats::optim()`] and [`subplex::subplex()`] for information on the available options.
 #' 
-#' @return \code{hansen} returns an object of class \code{hansentree}.
+#' @return `hansen` returns an object of class `hansentree`.
 #' @export
 hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
   fit = TRUE,
@@ -112,13 +115,13 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
   ...) {
 
   if (!is(tree,'ouchtree'))
-    stop(sQuote("tree")," must be an object of class ",sQuote("ouchtree"))
+    pStop("hansen",sQuote("tree")," must be an object of class ",sQuote("ouchtree"),".")
 
   if (missing(data)) {
     if (is(tree,"hansentree")) {
       data <- tree@data
     } else {
-      stop(sQuote("data")," must be specified")
+      pStop("hansen",sQuote("data")," must be specified.")
     }
   }
   if (is.data.frame(data)) {
@@ -135,23 +138,23 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
       any(sapply(data,class)!='numeric') ||
         any(sapply(data,length)!=tree@nnodes)
     )
-      stop(sQuote("data")," vector(s) must be numeric, with one entry per node of the tree")
+      pStop("hansen",sQuote("data")," vector(s) must be numeric, with one entry per node of the tree.")
     if (any(sapply(data,function(x)(is.null(names(x)))||(!setequal(names(x),tree@nodes)))))
-      stop(sQuote("data"), " vector names (or data-frame row names) must match node names of ", sQuote("tree"))
+      pStop("hansen",sQuote("data"), " vector names (or data-frame row names) must match node names of ", sQuote("tree"),".")
     for (xx in data) {
       no.dats <- which(is.na(xx[tree@nodes[tree@term]]))
       if (length(no.dats)>0)
-        stop("missing data on terminal node(s): ",
-          paste(sQuote(tree@nodes[tree@term[no.dats]]),collapse=', '))
+        pStop("missing data on terminal node(s): ",
+          paste(sQuote(tree@nodes[tree@term[no.dats]]),collapse=', '),".")
     }
   } else
-    stop(sQuote("data")," must be either a single numeric data set or a list of numeric data sets")
+    pStop("hansen",sQuote("data")," must be either a single numeric data set or a list of numeric data sets.")
 
   nchar <- length(data)
   if (is.null(names(data))) names(data) <- paste('char',seq_len(nchar),sep='')
   
   if (any(sapply(data,function(x)(is.null(names(x)))||(!setequal(names(x),tree@nodes)))))
-    stop("each data set must have names corresponding to the node names")
+    pStop("hansen","each data set must have names corresponding to the node names.")
   data <- lapply(data,function(x)x[tree@nodes])
   dat <- do.call(c,lapply(data,function(y)y[tree@term]))
   
@@ -160,17 +163,17 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
   nsigma <- length(sigma)
 
   if (nalpha!=nsymargs)
-    stop("the length of ",sQuote("sqrt.alpha")," must be a triangular number")
+    pStop("hansen","the length of ",sQuote("sqrt.alpha")," must be a triangular number.")
 
   if (nsigma!=nsymargs)
-    stop("the length of ",sQuote("sigma")," must be a triangular number")
+    pStop("hansen","the length of ",sQuote("sigma")," must be a triangular number.")
 
   if (missing(regimes)) {
     if (is(tree,"hansentree")) {
       regimes <- tree@regimes
       beta <- tree@beta
     } else {
-      stop(sQuote("regimes")," must be specified")
+      pStop("hansen",sQuote("regimes")," must be specified.")
     }
   }
   if (is.data.frame(regimes)) {
@@ -179,28 +182,28 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
   }
   if (is.list(regimes)) {
     if (any(sapply(regimes,length)!=tree@nnodes))
-      stop("each element in ",sQuote("regimes")," must be a vector with one entry per node of the tree")
+      pStop("hansen","each element in ",sQuote("regimes")," must be a vector with one entry per node of the tree.")
   } else {
     if (length(regimes)!=tree@nnodes)
-      stop("there must be one entry in ",sQuote("regimes")," per node of the tree")
+      pStop("hansen","there must be one entry in ",sQuote("regimes")," per node of the tree.")
     nm <- deparse(substitute(regimes))[1]
     regimes <- list(regimes)
     names(regimes) <- nm
   }
   
   if (any(!sapply(regimes,is.factor)))
-    stop(sQuote("regimes")," must be of class ",sQuote("factor")," or a list of ",sQuote("factor")," objects")
+    pStop("hansen",sQuote("regimes")," must be of class ",sQuote("factor")," or a list of ",sQuote("factor")," objects.")
 
   if (length(regimes)==1)
     regimes <- rep(regimes,nchar)
 
   if (length(regimes) != nchar)
-    stop("you must supply a regime-specification vector for each character")
+    pStop("hansen","you must supply a regime-specification vector for each character.")
 
   if (any(sapply(regimes,function(x)(is.null(names(x)))||(!setequal(names(x),tree@nodes)))))
-    stop("each regime specification must have names corresponding to the node names")
+    pStop("hansen","each regime specification must have names corresponding to the node names.")
   regimes <- lapply(regimes,function(x)x[tree@nodes])
-  beta <- regime.spec(tree,regimes)
+  beta <- regime_spec(tree,regimes)
 
   optim.diagn <- vector(mode='list',length=0)
 
@@ -212,10 +215,10 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
       opt <- subplex(
         par=c(sqrt.alpha,sigma),
         fn = function (par) {
-          ou.lik.fn(
+          ou_lik_fn(
             tree=tree,
-            alpha=sym.par(par[seq(nalpha)]),
-            sigma=sym.par(par[nalpha+seq(nsigma)]),
+            alpha=sym_par(par[seq(nalpha)]),
+            sigma=sym_par(par[nalpha+seq(nsigma)]),
             beta=beta,
             dat=dat
           )$deviance
@@ -224,19 +227,19 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
         control=list(...)
       )
       if (opt$convergence!=0) {
-        message("unsuccessful convergence, code ",opt$convergence,", see documentation for `subplex'")
+        message("unsuccessful convergence, code ",opt$convergence,", see documentation for ",sQuote("subplex"))
         if (!is.null(opt$message))
-          message("`subplex' message:",opt$message)
-        warning("unsuccessful convergence")
+          message(sQuote("subplex")," message: ",opt$message)
+        pWarn("hansen","unsuccessful convergence.")
       }
     } else {
       opt <- optim(
         par=c(sqrt.alpha,sigma),
         fn = function (par) {
-          ou.lik.fn(
+          ou_lik_fn(
             tree=tree,
-            alpha=sym.par(par[seq(nalpha)]),
-            sigma=sym.par(par[nalpha+seq(nsigma)]),
+            alpha=sym_par(par[seq(nalpha)]),
+            sigma=sym_par(par[nalpha+seq(nsigma)]),
             beta=beta,
             dat=dat
           )$deviance
@@ -247,10 +250,10 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
         control=list(...)
       )
       if (opt$convergence!=0) {
-        message("unsuccessful convergence, code ",opt$convergence,", see documentation for `optim'")
+        message("unsuccessful convergence, code ",opt$convergence,", see documentation for ",sQuote("optim"))
         if (!is.null(opt$message))
-          message("`optim' message:",opt$message)
-        warning("unsuccessful convergence")
+          message(sQuote("optim")," message: ",opt$message)
+        pWarn("hansen","unsuccessful convergence.")
       }
     }
 
@@ -271,15 +274,15 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
     ##     se.sigma <- rep(NA,nalpha)
   }
 
-  sol <- ou.lik.fn(
+  sol <- ou_lik_fn(
     tree=tree,
-    alpha=sym.par(sqrt.alpha),
-    sigma=sym.par(sigma),
+    alpha=sym_par(sqrt.alpha),
+    sigma=sym_par(sigma),
     beta=beta,
     dat=dat
   )
   theta.x <- sol$coeff
-  reg <- sets.of.regimes(tree,regimes)
+  reg <- sets_of_regimes(tree,regimes)
   theta <- vector('list',nchar)
   names(theta) <- names(data)
   count <- 1
@@ -307,7 +310,7 @@ hansen <- function (data, tree, regimes, sqrt.alpha, sigma,
 }
 
 ## note that, on input, alpha and sigma are full symmetric matrices
-ou.lik.fn <- function (tree, alpha, sigma, beta, dat) {
+ou_lik_fn <- function (tree, alpha, sigma, beta, dat) {
   n <- length(dat)
   ev <- eigen(alpha,symmetric=TRUE)
   w <- .Call(ouch_weights,object=tree,lambda=ev$values,S=ev$vectors,beta=beta)
@@ -326,7 +329,7 @@ ou.lik.fn <- function (tree, alpha, sigma, beta, dat) {
     q <- e%*%solve(v,e)
     det.v <- determinant(v,logarithm=TRUE)
     if (det.v$sign!=1)
-      stop("ou.lik.fn error: non-positive determinant",call.=FALSE)
+      pStop("ou_lik_fn","non-positive determinant.")
     dev <- n*log(2*pi)+as.numeric(det.v$modulus)+q[1,1]
   }
   list(
@@ -338,10 +341,10 @@ ou.lik.fn <- function (tree, alpha, sigma, beta, dat) {
   )
 }
 
-sym.par <- function (x) {
+sym_par <- function (x) {
   nchar <- floor(sqrt(2*length(x)))
   if (nchar*(nchar+1)!=2*length(x)) {
-    stop("a symmetric matrix is parameterized by a triangular number of parameters",call.=FALSE) #nocov
+    pStop_("a symmetric matrix is parameterized by a triangular number of parameters.") #nocov
   }
   y <- matrix(0,nchar,nchar)
   y[lower.tri(y,diag=TRUE)] <- x
@@ -353,14 +356,14 @@ sym.par <- function (x) {
 ##   y[lower.tri(y,diag=TRUE)]
 ## }
 
-sets.of.regimes <- function (object, regimes) {
+sets_of_regimes <- function (object, regimes) {
   lapply(regimes,function(x)sort(unique(x)))
 }
 
-regime.spec <- function (object, regimes) {
+regime_spec <- function (object, regimes) {
   nterm <- object@nterm
   nchar <- length(regimes)
-  reg <- sets.of.regimes(object,regimes)
+  reg <- sets_of_regimes(object,regimes)
   nreg <- sapply(reg,length)
   beta <- vector(mode='list',length=nterm)
   for (i in seq_len(nterm)) {
@@ -395,10 +398,10 @@ regime.spec <- function (object, regimes) {
 ##   x
 ## }
 
-hansen.deviate <- function (n = 1, object) {
-  ev <- eigen(sym.par(object@sqrt.alpha),symmetric=TRUE)
+hansen_deviate <- function (n = 1, object) {
+  ev <- eigen(sym_par(object@sqrt.alpha),symmetric=TRUE)
   w <- .Call(ouch_weights,object=object,lambda=ev$values,S=ev$vectors,beta=object@beta)
-  v <- .Call(ouch_covar,object=object,lambda=ev$values,S=ev$vectors,sigma.sq=sym.par(object@sigma))
+  v <- .Call(ouch_covar,object=object,lambda=ev$values,S=ev$vectors,sigma.sq=sym_par(object@sigma))
   X <- array(
     data=NA,
     dim=c(object@nnodes,object@nchar,n),
@@ -423,11 +426,10 @@ hansen.deviate <- function (n = 1, object) {
 }
 
 #' @rdname coef
-#' @aliases coef-hansentree, coef,hansentree-method
 #' @include coef.R
 #' @importFrom stats coef
-#' @return \code{coef} applied to a \code{hansentree} object returns a named list containing the estimated \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices(given as the \code{alpha.matrix} and \code{sigma.sq.matrix} elements, respectively) but also the MLE returned by the optimizer
-#' (as \code{sqrt.alpha} and \code{sigma}, respectively).
+#' @return `coef` applied to a `hansentree` object returns a named list containing the estimated \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices(given as the `alpha.matrix` and `sigma.sq.matrix` elements, respectively) but also the MLE returned by the optimizer
+#' (as `sqrt.alpha` and `sigma`, respectively).
 #' \strong{The latter elements should not be interpreted, but can be used to restart the algorithm, etc.}
 #' @export
 setMethod(
@@ -438,14 +440,13 @@ setMethod(
       sqrt.alpha=object@sqrt.alpha,
       sigma=object@sigma,
       theta=object@theta,
-      alpha.matrix=sym.par(object@sqrt.alpha),
-      sigma.sq.matrix=sym.par(object@sigma)
+      alpha.matrix=sym_par(object@sqrt.alpha),
+      sigma.sq.matrix=sym_par(object@sigma)
     )
   }
 )
 
 #' @rdname logLik
-#' @aliases logLik-hansentree, logLik,hansentree-method
 #' @include logLik.R
 #' @importFrom stats logLik
 #' @export
@@ -456,9 +457,8 @@ setMethod(
 )
 
 #' @rdname summary
-#' @aliases summary-hansentree, summary,hansentree-method
 #' @include summary.R
-#' @return \code{summary} applied to a \code{hansentree} method displays the estimated \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices as well as various quantities describing the goodness of model fit.
+#' @return `summary` applied to a `hansentree` method displays the estimated \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices as well as various quantities describing the goodness of model fit.
 #' @export
 setMethod(
   "summary",
@@ -490,9 +490,7 @@ setMethod(
 )
 
 #' @rdname print
-#' @aliases print-hansentree, print,hansentree-method
 #' @include print.R
-#' @return \code{print} displays the tree as a table, along with the coefficients of the fitted model and diagnostic information.
 #' @export
 setMethod(
   'print',
@@ -520,7 +518,6 @@ setMethod(
 )
 
 #' @rdname print
-#' @aliases show-hansentree, show,hansentree-method
 #' @include print.R
 #' @export
 setMethod(
@@ -533,21 +530,19 @@ setMethod(
 )
 
 #' @rdname plot
-#' @aliases plot,hansentree-method plot-hansentree
 #' @include plot.R
 #' @export
 setMethod(
   "plot",
   signature=signature(x="hansentree"),
-  function (x, ..., regimes) {
+  function (x, ..., regimes, legend = TRUE) {
     if (missing(regimes)) regimes <- x@regimes
     f <- getMethod("plot","ouchtree")
-    f(x=x,regimes=regimes,...)
+    f(x=x,regimes=regimes,legend=legend,...)
   }
 )
 
 #' @rdname simulate
-#' @aliases simulate-hansentree, simulate,hansentree-method
 #' @include simulate.R package.R
 #' @importFrom stats runif
 #' @export
@@ -556,14 +551,13 @@ setMethod(
   signature=signature(object='hansentree'),
   function (object, nsim = 1, seed = NULL, ...) {
     seed <- freeze(seed)
-    X <- hansen.deviate(n=nsim,object)
+    X <- hansen_deviate(n=nsim,object)
     thaw(seed)
     X
   }
 )
 
 #' @rdname update
-#' @aliases update-hansentree, update,hansentree-method
 #' @include update.R
 #' @importFrom stats update
 #' @inheritParams hansen
@@ -586,7 +580,6 @@ setMethod(
 )
 
 #' @rdname bootstrap
-#' @aliases bootstrap-hansentree, bootstrap,hansentree-method
 #' @include bootstrap.R
 #' @export
 setMethod(

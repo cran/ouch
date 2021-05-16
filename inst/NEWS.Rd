@@ -1,5 +1,13 @@
 \name{NEWS}
 \title{News for Package 'ouch'}
+\section{Changes in ouch version 2.17}{
+  \itemize{
+    \item Both left and right plot margins can be adjusted to allow, for example, for long taxon names or long legend labels.
+    \item There is now an example showing how to plot a tree with long taxon names.
+    \item Error messages and examples have been improved somewhat.
+    \item The manual and help pages have been streamlined.
+  }
+}
 \section{Changes in ouch version 2.16}{
   \itemize{
     \item The arguments to the various \code{plot} methods have changed.

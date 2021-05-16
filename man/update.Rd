@@ -5,8 +5,7 @@
 \alias{update}
 \alias{update,browntree-method}
 \alias{update,hansentree-method}
-\alias{update-hansentree,}
-\title{Update and refit a model.}
+\title{Update and refit an \pkg{ouch} model}
 \usage{
 \S4method{update}{browntree}(object, data, ...)
 
@@ -46,13 +45,15 @@ See Details for more information.}
 This allows one to change the data and/or parameters.
 }
 \seealso{
-Other methods: 
+Other methods for ouch trees: 
 \code{\link{bootstrap}()},
 \code{\link{coef}()},
 \code{\link{logLik}},
+\code{\link{ouch-package}},
+\code{\link{paint}()},
 \code{\link{plot}()},
 \code{\link{print}()},
 \code{\link{simulate}()},
 \code{\link{summary}()}
 }
-\concept{methods}
+\concept{methods for ouch trees}

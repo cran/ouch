@@ -1,8 +1,8 @@
-#' Summary methods
+#' \pkg{ouch} summary methods
 #'
 #' @name summary
 #' @rdname summary
-#' @family methods
+#' @family methods for ouch trees
 #' @param object fitted model object.
 #' @param ... additional arguments, ignored.
 #'

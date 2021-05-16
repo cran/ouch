@@ -1,33 +1,36 @@
-#' ouch plotting functions
+#' \pkg{ouch} plotting functions
 #'
 #' Plot phylogenetic trees, with or without regime paintings.
 #'
 #' @name plot
 #' @rdname plot
-#' @family methods
+#' @family methods for ouch trees
 #' @param x object to plot.
-#' @param y ignored.
 #' @param regimes factor or character; a vector of regime paintings.
 #' @param node.names logical; should node names be displayed?
 #' @param ladderize logical; should the tree be ladderized?
 #' @param legend logical; display a legend?
 #' @param palette function or character; specifies the colors to be used for the several regimes on the tree.
-#' Specified as a function, when given an integer, \code{n}, the function should create a vector of \code{n} colors.
-#' See, for example \code{\link[grDevices:rainbow]{rainbow}}.
-#' One can also specify the \code{n} colors as a vector of color codes.
-#' There must be at least as many colors as levels in the \code{regimes}.
+#' Specified as a function, when given an integer, `n`, the function should create a vector of `n` colors.
+#' See, for example [`rainbow`][grDevices::rainbow()].
+#' One can also specify the `n` colors as a vector of color codes.
+#' There must be at least as many colors as levels in the `regimes`.
 #' @param labels character; taxon labels.
 #' @param margin numeric; width of the right margin (as a fraction of the plot width).
-#' Adjust this if labels are clipped.
-#' If different left and right margins are desired, furnish two numbers here.
-#' @param text_opts options for the labels; passed to \code{\link[graphics]{text}}
-#' @param legend_opts options for the the legend; passed to \code{\link[graphics]{legend}}
-#' @param ... additional arguments, passed to \code{\link[graphics]{plot}}.
+#' Adjust this if labels are clipped (see Examples below).
+#' One can also adjust the width of the left margin (for example to aid in the formatting of the figure legend).
+#' To do this, furnish `margin=c(L, R)`, where `L` and `R` are the widths of the right and left margins, respectively, as fractions of the plot width.
+#' Obviously, in this case, we must have `L+R<1`.
+#' @param text_opts options for the labels; passed to [`text`][graphics::text()].
+#' @param legend_opts options for the the legend; passed to [`legend`][graphics::legend()].
+#' @param ... additional arguments, passed to [`plot`][graphics::plot()].
 #' 
 #' @inheritParams graphics::plot.default
 #' @importFrom graphics plot text legend par
 #' @importFrom grDevices rainbow
 NULL
+
+setGeneric("plot")
 
 tree.plot.internal <- function (
   x, ...,
@@ -46,18 +49,29 @@ tree.plot.internal <- function (
   legend <- as.logical(legend)
   rx <- range(x@times,na.rm=T)
   margin <- as.numeric(margin)
-  if (!(length(margin)==1 && isTRUE(margin>=0 && margin<1)))
-    stop(sQuote("margin")," should be between 0 and 1.",call.=FALSE)
+  if (length(margin)>2L||length(margin)<1L)
+    pStop("plot",sQuote("margin")," should be one or two numbers.")
+  if (!isTRUE(all(margin>=0 & margin<1)))
+    pStop("plot",sQuote("margin")," should be between 0 and 1.")
+  if (!isTRUE(sum(margin)<1))
+    pStop("plot",sQuote("margin")," sum >= 1!")
+  if (length(margin)>1L) {
+    lmargin <- margin[1L]
+    margin <- margin[2L]
+  } else {
+    lmargin <- 0
+  }
   rxd <- margin*diff(rx)/(1-margin)
+  lxd <- lmargin*diff(rx)/(1-lmargin)
   anc <- x@anc.numbers
   root <- which(is.root.node(anc))
   if (is.null(regimes)) {
     regimes <- factor(rep('unspec',length(anc)))
     names(regimes) <- x@nodes
   } else if (length(regimes)!=x@nnodes)
-    stop("there must be one entry in ",sQuote("regimes")," per node of the tree",call.=FALSE)
+    pStop("plot","there must be one entry in ",sQuote("regimes")," per node of the tree.")
   if (is.null(names(regimes)) || !setequal(names(regimes),x@nodes))
-    stop("regime specifications must have names corresponding to the node names",call.=FALSE)
+    pStop("plot","regime specifications must have names corresponding to the node names.")
   regimes <- regimes[x@nodes]
   levs <- levels(as.factor(regimes))
   ## if the root is the only one with a certain regime, toss that regime out
@@ -66,7 +80,7 @@ tree.plot.internal <- function (
   if (is.function(palette))
     palette <- palette(length(levs))
   else if (!(is.character(palette) && length(palette)>=length(levs)))
-    stop(sQuote("palette")," must be either a function or a character vector of length >= ",length(levs),".",call.=FALSE)
+    pStop("plot",sQuote("palette")," must be either a function or a character vector of length >= ",length(levs),".")
   if (ladderize) {
     cs <- clade_size(root,anc)
   } else {
@@ -92,7 +106,7 @@ tree.plot.internal <- function (
             xaxp=if (is.null(xaxp)) c(rx,1) else xaxp,
             yaxt='n',
             xlab=xlab,ylab=ylab,
-            xlim=rx+c(0,rxd),ylim=c(0,1),
+            xlim=rx+c(-lxd,rxd),ylim=c(0,1),
             ...
           )
     if (!is.null(labels)) {
@@ -152,18 +166,18 @@ arrange_tree <- function (root, anc, cs, ypos = numeric(length(anc))) {
 }
 
 #' @rdname plot
-#' @aliases plot,ouchtree-method
 #' @importFrom graphics par
 #' @importFrom grDevices rainbow
 #' @importFrom stats setNames
+#' @example examples/bimac2.R
 #' @export
 setMethod(
   "plot",
   signature=signature(x="ouchtree"),
   function (
-    x, y, ..., regimes = NULL, ladderize = TRUE,
+    x, ..., regimes = NULL, ladderize = TRUE,
     node.names = FALSE,
-    legend = TRUE, labels, frame.plot = FALSE,
+    legend = !is.null(regimes), labels, frame.plot = FALSE,
     palette = rainbow,
     margin = 0.1,
     text_opts = list(),
@@ -181,7 +195,7 @@ setMethod(
     }
     if (!(is.list(regimes) || is.null(regimes))) {
       if (length(regimes)!=x@nnodes)
-        stop("there must be one entry in ",sQuote("regimes")," per node of the tree",call.=FALSE)
+        pStop("plot","there must be one entry in ",sQuote("regimes")," per node of the tree.")
       nm <- deparse(substitute(regimes))[1]
       regimes <- list(regimes)
       names(regimes) <- nm

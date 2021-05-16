@@ -2,15 +2,14 @@
 % Please edit documentation in R/print.R, R/ouchtree.R, R/brown.R, R/hansen.R
 \name{print}
 \alias{print}
+\alias{show}
 \alias{print,ouchtree-method}
 \alias{show,ouchtree-method}
 \alias{show,browntree-method}
 \alias{print,browntree-method}
 \alias{print,hansentree-method}
-\alias{print-hansentree,}
 \alias{show,hansentree-method}
-\alias{show-hansentree,}
-\title{Print methods}
+\title{Print and show methods}
 \usage{
 \S4method{print}{ouchtree}(x, ...)
 
@@ -30,23 +29,28 @@
 \item{object, x}{object to display.}
 }
 \value{
-\code{print} displays the tree as a table, with (possibly) other information.
+\code{print} returns \code{x}, invisibly.
 
-\code{print} displays the tree as a table, along with the coefficients of the fitted model and diagnostic information.
-
-\code{print} displays the tree as a table, along with the coefficients of the fitted model and diagnostic information.
+\code{show} returns \code{NULL}, invisibly.
 }
 \description{
-Print methods
+Print and show methods
+}
+\details{
+\code{print} displays the tree as a table, along with the coefficients of the fitted model and diagnostic information.
+\code{show} provides a similar display.
 }
 \seealso{
-Other methods: 
+Other methods for ouch trees: 
 \code{\link{bootstrap}()},
 \code{\link{coef}()},
 \code{\link{logLik}},
+\code{\link{ouch-package}},
+\code{\link{paint}()},
 \code{\link{plot}()},
 \code{\link{simulate}()},
 \code{\link{summary}()},
 \code{\link{update}()}
 }
-\concept{methods}
+\concept{methods for ouch trees}
+\keyword{internal}

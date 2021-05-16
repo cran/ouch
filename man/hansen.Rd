@@ -44,12 +44,12 @@ If \code{fit=FALSE}, the likelihood will be evaluated at the specified values of
 the optima \code{theta} will be returned as well.}
 
 \item{method}{The method to be used by the optimization algorithm.
-See \code{\link[subplex]{subplex}} and \code{\link{optim}} for information on the available options.}
+See \code{\link[subplex:subplex]{subplex::subplex}} and \code{\link[stats:optim]{stats::optim}} for information on the available options.}
 
 \item{hessian}{If \code{hessian=TRUE}, then the Hessian matrix will be computed by \code{optim}.}
 
 \item{\dots}{Additional arguments will be passed as \code{control} options to \code{optim} or \code{subplex}.
-See \code{\link{optim}} and \code{\link[subplex:subplex]{subplex}} for information on the available options.}
+See \code{\link[stats:optim]{stats::optim()}} and \code{\link[subplex:subplex]{subplex::subplex()}} for information on the available options.}
 }
 \value{
 \code{hansen} returns an object of class \code{hansentree}.
@@ -83,54 +83,62 @@ The parameters specified in \code{sigma} fill the nonzero entries in the lower t
 When \code{hansen} is executed, the numerical optimizer maximizes the likelihood over these parameters.
 }
 \examples{
-\dontrun{
-  if (library(geiger,logical.return=TRUE)) {
-    
-### an example data set (Darwin's finches)
-    data(geospiza)
-    str(geospiza)
-    sapply(geospiza,class)
+## Analysis of sexual size dimorphism data
+tree <- with(anolis.ssd,ouchtree(node,ancestor,time/max(time),species))
+plot(tree,node.names=TRUE)
+
+h1 <- brown(anolis.ssd['log.SSD'],tree)
+h1
+plot(h1)
+
+h2 <- hansen(anolis.ssd['log.SSD'],tree,anolis.ssd['OU.1'],sqrt.alpha=1,sigma=1)
+h2
+plot(h2)
+
+h3 <- hansen(anolis.ssd['log.SSD'],tree,anolis.ssd['OU.7'],sqrt.alpha=1,sigma=1)
+h3
+plot(h3)
+### Darwin's finches
+library(geiger)
+data(geospiza)
 
 ### check the correspondence between data and tree tips:
-    print(nc <- with(geospiza,name.check(geospiza.tree,geospiza.data)))
+print(nc <- with(geospiza,name.check(geospiza.tree,geospiza.data)))
 ### looks like one of the terminal twigs has no data associated
 ### drop that tip:
-    tree <- with(geospiza,drop.tip(geospiza.tree,nc$tree_not_data))
-    dat <- as.data.frame(geospiza$dat)
-
+tree <- with(geospiza,drop.tip(geospiza.tree,nc$tree_not_data))
+dat <- as.data.frame(geospiza$dat)
 
 ### make an ouchtree out of the phy-format tree
-    ot <- ape2ouch(tree)
+ot <- ape2ouch(tree)
 
 ### merge data with tree info
-    otd <- as(ot,"data.frame")
+otd <- as(ot,"data.frame")
 ### in these data, it so happens that the rownames correspond to node names
 ### we will exploit this correspondence in the 'merge' operation:
-    dat$labels <- rownames(dat)
-    otd <- merge(otd,dat,by="labels",all=TRUE)
-    rownames(otd) <- otd$nodes
-    print(otd)
+dat$labels <- rownames(dat)
+otd <- merge(otd,dat,by="labels",all=TRUE)
+rownames(otd) <- otd$nodes
+print(otd)
 ### this data-frame now contains the data as well as the tree geometry
 
 ### now remake the ouch tree
-    ot <- with(otd,ouchtree(nodes=nodes,ancestors=ancestors,times=times,labels=labels))
+ot <- with(otd,ouchtree(nodes=nodes,ancestors=ancestors,times=times,labels=labels))
 
-    b1 <- brown(tree=ot,data=otd[c("tarsusL","beakD")])
-    summary(b1)
+b1 <- brown(tree=ot,data=otd[c("tarsusL","beakD")])
+summary(b1)
 
 ### evaluate an OU model with a single, global selective regime
-    otd$regimes <- as.factor("global")
-    h1 <- hansen(
-      tree=ot,
-      data=otd[c("tarsusL","beakD")],
-      regimes=otd["regimes"],
-      sqrt.alpha=c(1,0,1),
-      sigma=c(1,0,1),
-      maxit=10000
-    )
-    summary(h1)
-  }
-}
+otd$regimes <- as.factor("global")
+h1 <- hansen(
+  tree=ot,
+  data=otd[c("tarsusL","beakD")],
+  regimes=otd["regimes"],
+  sqrt.alpha=c(1,0,1),
+  sigma=c(1,0,1),
+  maxit=10000
+)
+summary(h1)
 }
 \references{
 \Butler2004
@@ -138,9 +146,16 @@ When \code{hansen} is executed, the numerical optimizer maximizes the likelihood
 \Cressler2015
 }
 \seealso{
-\code{\link{ouchtree}}, \code{\link{brown}}, \code{\link[stats:optim]{optim}}, \code{\link[subplex:subplex]{subplex}}, \code{\link{bimac}}, \code{\link{anolis.ssd}}
+\code{\link[stats:optim]{stats::optim}}, \code{\link[subplex:subplex]{subplex::subplex}}, \code{\link{bimac}}, \code{\link{anolis.ssd}}
+
+Other phylogenetic comparative models: 
+\code{\link{brown}()},
+\code{\link{ouch-package}},
+\code{\link{ouchtree}},
+\code{\link{paint}()}
 }
 \author{
 Aaron A. King
 }
+\concept{phylogenetic comparative models}
 \keyword{models}

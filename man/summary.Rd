@@ -4,8 +4,7 @@
 \alias{summary}
 \alias{summary,browntree-method}
 \alias{summary,hansentree-method}
-\alias{summary-hansentree,}
-\title{Summary methods}
+\title{\pkg{ouch} summary methods}
 \usage{
 \S4method{summary}{browntree}(object, ...)
 
@@ -22,16 +21,18 @@
 \code{summary} applied to a \code{hansentree} method displays the estimated \eqn{\alpha}{alpha} and \eqn{\sigma^2}{sigma^2} matrices as well as various quantities describing the goodness of model fit.
 }
 \description{
-Summary methods
+\pkg{ouch} summary methods
 }
 \seealso{
-Other methods: 
+Other methods for ouch trees: 
 \code{\link{bootstrap}()},
 \code{\link{coef}()},
 \code{\link{logLik}},
+\code{\link{ouch-package}},
+\code{\link{paint}()},
 \code{\link{plot}()},
 \code{\link{print}()},
 \code{\link{simulate}()},
 \code{\link{update}()}
 }
-\concept{methods}
+\concept{methods for ouch trees}
