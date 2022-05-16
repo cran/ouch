@@ -25,9 +25,14 @@
 #'   - Display of data: [`plot()`]
 #'   - Extraction of information from fitted models: [`summary()`], [`logLik()`], [`coef()`]
 #'   - Example datasets: [`anolis.ssd`], [`bimac`]
+#'
+#' @section Citing \pkg{ouch}:
+#' Execute \code{citation("ouch")} to view the correct citation for publications.
 #' 
 #' @author Aaron A. King
 #' @references
+#' \Hansen1997
+#' 
 #' \Butler2004
 #'
 #' \Cressler2015

@@ -32,7 +32,14 @@ The class \code{hansentree} derives from class \code{ouchtree} and encodes the r
 }
 }
 
+\section{Citing \pkg{ouch}}{
+
+Execute \code{citation("ouch")} to view the correct citation for publications.
+}
+
 \references{
+\Hansen1997
+
 \Butler2004
 
 \Cressler2015
@@ -57,7 +64,8 @@ Other methods for ouch trees:
 
 Other examples: 
 \code{\link{anolis.ssd}},
-\code{\link{bimac}}
+\code{\link{bimac}},
+\code{\link{geospiza}}
 }
 \author{
 Aaron A. King
