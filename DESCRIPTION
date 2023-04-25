@@ -2,10 +2,10 @@ Package: ouch
 Type: Package
 Title: Ornstein-Uhlenbeck Models for Phylogenetic Comparative
         Hypotheses
-Version: 2.18
-Date: 2022-05-14
-Authors@R: c(person(given=c("Aaron","A."),family="King",role=c("aut","cre"),email="kingaa@umich.edu"),
-	  person(given=c("Marguerite","A."),family="Butler",role=c("ctb")))
+Version: 2.19
+Date: 2023-04-24
+Authors@R: c(person(given=c("Aaron","A."),family="King",role=c("aut","cre"),email="kingaa@umich.edu",comment=c(ORCID="0000-0001-6159-3207")),
+	person(given=c("Marguerite","A."),family="Butler",role=c("ctb")))
 Maintainer: Aaron A. King <kingaa@umich.edu>
 Description: Fit and compare Ornstein-Uhlenbeck models for evolution along a phylogenetic tree.
 Depends: R(>= 3.6)
@@ -15,16 +15,16 @@ URL: https://kingaa.github.io/ouch/
 License: GPL-3
 LazyLoad: true
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 BugReports: https://github.com/kingaa/ouch/issues/
 Encoding: UTF-8
 Collate: 'anolis.R' 'print.R' 'package.R' 'ouchtree.R' 'ape2ouch.R'
-        'bimac.R' 'bootstrap.R' 'update.R' 'simulate.R' 'summary.R'
-        'logLik.R' 'coef.R' 'rmvnorm.R' 'glssoln.R' 'brown.R'
-        'geospiza.R' 'plot.R' 'hansen.R' 'paint.R'
+        'bootstrap.R' 'update.R' 'simulate.R' 'plot.R' 'summary.R'
+        'logLik.R' 'coef.R' 'rmvnorm.R' 'glssoln.R' 'hansen.R'
+        'brown.R' 'as_data_frame.R' 'bimac.R' 'geospiza.R' 'paint.R'
 NeedsCompilation: yes
-Packaged: 2022-05-14 17:56:33 UTC; kingaa
-Author: Aaron A. King [aut, cre],
+Packaged: 2023-04-25 00:12:21 UTC; kingaa
+Author: Aaron A. King [aut, cre] (<https://orcid.org/0000-0001-6159-3207>),
   Marguerite A. Butler [ctb]
 Repository: CRAN
-Date/Publication: 2022-05-16 10:10:02 UTC
+Date/Publication: 2023-04-25 02:30:02 UTC
